@@ -1,4 +1,4 @@
-package com.akirabane.habitflow_backend;
+package com.akirabane.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

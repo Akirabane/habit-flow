@@ -1,4 +1,4 @@
-package com.akirabane.habitflow_backend;
+package com.akirabane.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
