@@ -1,0 +1,40 @@
+<div class="auth-container">
+  <h1>Connexion</h1>
+
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <label>
+      Email
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        required
+        autocomplete="email"
+      />
+    </label>
+
+    <label>
+      Mot de passe
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        required
+        autocomplete="current-password"
+      />
+    </label>
+
+    <button type="submit" [disabled]="loading || !loginForm.valid">
+      {{ loading ? 'Connexion...' : 'Se connecter' }}
+    </button>
+
+    <p [@if]="error" class="error">
+      {{ error }}
+    </p>
+
+    <p>
+      Pas encore de compte ?
+      <a routerLink="/register">Créer un compte</a>
+    </p>
+  </form>
+</div>

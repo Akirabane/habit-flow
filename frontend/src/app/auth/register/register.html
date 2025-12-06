@@ -1,0 +1,56 @@
+<div class="auth-container">
+  <h1>Création de compte</h1>
+
+  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+    <label>
+      Nom complet
+      <input
+        type="text"
+        name="fullName"
+        [(ngModel)]="fullName"
+        required
+        autocomplete="name"
+      />
+    </label>
+
+    <label>
+      Email
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        required
+        autocomplete="email"
+      />
+    </label>
+
+    <label>
+      Mot de passe
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        required
+        minlength="6"
+        autocomplete="new-password"
+      />
+    </label>
+
+    <button type="submit" [disabled]="loading || !registerForm.valid">
+      {{ loading ? 'Création...' : "S'inscrire" }}
+    </button>
+
+    <p [@If]="error" class="error">
+      {{ error }}
+    </p>
+
+    <p [@if]="success" class="success">
+      {{ success }}
+    </p>
+
+    <p>
+      Déjà un compte ?
+      <a routerLink="/login">Se connecter</a>
+    </p>
+  </form>
+</div>
