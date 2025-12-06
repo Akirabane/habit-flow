@@ -1,6 +1,7 @@
 package com.akirabane.backend.controller;
 
 import com.akirabane.backend.dto.HabitCheckRequest;
+import com.akirabane.backend.dto.HabitStatsResponse;
 import com.akirabane.backend.model.HabitCheck;
 import com.akirabane.backend.service.HabitCheckService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,4 +38,15 @@ public class HabitCheckController {
 
         return habitCheckService.getChecksInRange(habitId, start, end);
     }
+
+    // GET /api/habits/{habitId}/stats?start=YYYY-MM-DD&end=YYYY-MM-DD
+    @GetMapping("/{habitId}/stats")
+    public HabitStatsResponse getStats(
+            @PathVariable Long habitId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+
+        return habitCheckService.getStats(habitId, start, end);
+    }
+
 }
