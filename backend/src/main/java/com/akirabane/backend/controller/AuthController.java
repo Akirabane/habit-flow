@@ -1,5 +1,7 @@
 package com.akirabane.backend.controller;
 
+import com.akirabane.backend.dto.AuthResponseDto;
+import com.akirabane.backend.dto.LoginRequestDto;
 import com.akirabane.backend.dto.RegisterRequestDto;
 import com.akirabane.backend.model.UserModel;
 import com.akirabane.backend.service.AuthService;
@@ -22,4 +24,10 @@ public class AuthController {
     public UserModel register(@Valid @RequestBody RegisterRequestDto request) {
         return authService.register(request);
     }
+
+    @PostMapping("/login")
+    public AuthResponseDto login(@Valid @RequestBody LoginRequestDto request) {
+        return authService.login(request);
+    }
+
 }
