@@ -6,6 +6,7 @@ import com.akirabane.backend.model.HabitModel;
 import com.akirabane.backend.model.UserModel;
 import com.akirabane.backend.repository.HabitRepository;
 import com.akirabane.backend.repository.UserRepository;
+import com.akirabane.backend.security.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,6 +31,9 @@ public class UserService {
     }
 
     public UserWithHabitsDto getUserWithHabits(Long userId) {
+
+        SecurityUtils.assertCurrentUserOrAdmin(userId);
+
         UserModel user = getUserOrThrow(userId);
         List<HabitModel> habits = habitRepository.findAllByUser(user);
 

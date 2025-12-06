@@ -5,6 +5,7 @@ import com.akirabane.backend.model.HabitModel;
 import com.akirabane.backend.model.UserModel;
 import com.akirabane.backend.repository.HabitRepository;
 import com.akirabane.backend.repository.UserRepository;
+import com.akirabane.backend.security.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,12 +30,19 @@ public class HabitService {
 
     public List<HabitModel> getAllForUser(Long userId) {
         UserModel user = getUserOrThrow(userId);
+        SecurityUtils.assertCurrentUserOrAdmin(user.getId()); // <--- contrôle
+
         return habitRepository.findAllByUser(user);
     }
 
+
     public HabitModel getById(Long id) {
-        return habitRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "HabitModel not found"));
+        HabitModel habit = habitRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit not found"));
+
+        assertCanAccessHabitOwner(habit.getUser());
+
+        return habit;
     }
 
     private UserModel getUserOrThrow(Long userId) {
@@ -53,6 +61,7 @@ public class HabitService {
 
     public HabitModel createForUser(Long userId, HabitRequestDto dto) {
         UserModel user = getUserOrThrow(userId);
+        SecurityUtils.assertCurrentUserOrAdmin(user.getId()); // <--- contrôle
 
         HabitModel habit = new HabitModel();
         habit.setName(dto.getName());
@@ -64,20 +73,26 @@ public class HabitService {
         return habitRepository.save(habit);
     }
 
-    public HabitModel update(Long id, HabitRequestDto request) {
-        HabitModel existing = getById(id);
-        existing.setName(request.getName());
-        existing.setCategory(request.getCategory());
-        existing.setFrequencyType(request.getFrequencyType());
-        existing.setArchived(request.isArchived());
+
+    public HabitModel update(Long id, HabitRequestDto dto) {
+        HabitModel existing = getById(id); // getById check déjà l'accès
+        existing.setName(dto.getName());
+        existing.setCategory(dto.getCategory());
+        existing.setFrequencyType(dto.getFrequencyType());
+        existing.setArchived(dto.isArchived());
         return habitRepository.save(existing);
     }
 
     public void delete(Long id) {
-        if (!habitRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "HabitModel not found");
+        HabitModel existing = getById(id); // check accès
+        habitRepository.delete(existing);
+    }
+
+    private void assertCanAccessHabitOwner(UserModel owner) {
+        var current = SecurityUtils.getCurrentUserOrThrow();
+        if (!SecurityUtils.isAdmin(current) && !current.getId().equals(owner.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
-        habitRepository.deleteById(id);
     }
 
 }

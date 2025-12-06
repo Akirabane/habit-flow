@@ -5,6 +5,7 @@ import com.akirabane.backend.model.HabitModel;
 import com.akirabane.backend.model.HabitCheckModel;
 import com.akirabane.backend.repository.HabitCheckRepository;
 import com.akirabane.backend.repository.HabitRepository;
+import com.akirabane.backend.security.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,6 +34,10 @@ public class HabitCheckService {
     }
 
     public HabitCheckModel toggleCheck(Long habitId, LocalDate date) {
+        HabitModel habit = getHabitOrThrow(habitId);
+        // vérifie que le user courant est propriétaire (ou admin)
+        assertCanAccessHabit(habit);
+
         HabitModel habitModel = getHabitOrThrow(habitId);
 
         return (HabitCheckModel) habitCheckRepository.findByHabitAndDate(habitModel, date)
@@ -47,14 +52,24 @@ public class HabitCheckService {
     }
 
     public List<HabitCheckModel> getChecksInRange(Long habitId, LocalDate start, LocalDate end) {
-        HabitModel habitModel = getHabitOrThrow(habitId);
-        return habitCheckRepository.findAllByHabitAndDateBetween(habitModel, start, end);
+        if (end.isBefore(start)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "end date must be after start date");
+        }
+
+        HabitModel habit = getHabitOrThrow(habitId);
+        assertCanAccessHabit(habit);
+
+        return habitCheckRepository.findAllByHabitAndDateBetween(habit, start, end);
     }
+
 
     public HabitStatsResponseDto getStats(Long habitId, LocalDate start, LocalDate end) {
         if (end.isBefore(start)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "end date must be after start date");
         }
+
+        HabitModel habit = getHabitOrThrow(habitId);
+        assertCanAccessHabit(habit);
 
         HabitModel habitModel = getHabitOrThrow(habitId);
 
@@ -105,4 +120,14 @@ public class HabitCheckService {
 
         return stats;
     }
+
+    private void assertCanAccessHabit(HabitModel habit) {
+        var owner = habit.getUser();
+        var current = SecurityUtils.getCurrentUserOrThrow();
+
+        if (!SecurityUtils.isAdmin(current) && !current.getId().equals(owner.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+    }
+
 }
