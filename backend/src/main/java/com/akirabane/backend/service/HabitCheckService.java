@@ -1,8 +1,8 @@
 package com.akirabane.backend.service;
 
-import com.akirabane.backend.dto.HabitStatsResponse;
-import com.akirabane.backend.model.Habit;
-import com.akirabane.backend.model.HabitCheck;
+import com.akirabane.backend.dto.HabitStatsResponseDto;
+import com.akirabane.backend.model.HabitModel;
+import com.akirabane.backend.model.HabitCheckModel;
 import com.akirabane.backend.repository.HabitCheckRepository;
 import com.akirabane.backend.repository.HabitRepository;
 import org.springframework.http.HttpStatus;
@@ -27,47 +27,47 @@ public class HabitCheckService {
         this.habitCheckRepository = habitCheckRepository;
     }
 
-    private Habit getHabitOrThrow(Long habitId) {
+    private HabitModel getHabitOrThrow(Long habitId) {
         return habitRepository.findById(habitId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "HabitModel not found"));
     }
 
-    public HabitCheck toggleCheck(Long habitId, LocalDate date) {
-        Habit habit = getHabitOrThrow(habitId);
+    public HabitCheckModel toggleCheck(Long habitId, LocalDate date) {
+        HabitModel habitModel = getHabitOrThrow(habitId);
 
-        return (HabitCheck) habitCheckRepository.findByHabitAndDate(habit, date)
+        return (HabitCheckModel) habitCheckRepository.findByHabitAndDate(habitModel, date)
                 .map(existing -> {   // déjà coché -> on supprime (toggle off)
                     habitCheckRepository.delete(existing);
                     return null;
                 })
                 .orElseGet(() -> {   // pas encore coché -> on crée
-                    HabitCheck created = new HabitCheck(habit, date);
+                    HabitCheckModel created = new HabitCheckModel(habitModel, date);
                     return habitCheckRepository.save(created);
                 });
     }
 
-    public List<HabitCheck> getChecksInRange(Long habitId, LocalDate start, LocalDate end) {
-        Habit habit = getHabitOrThrow(habitId);
-        return habitCheckRepository.findAllByHabitAndDateBetween(habit, start, end);
+    public List<HabitCheckModel> getChecksInRange(Long habitId, LocalDate start, LocalDate end) {
+        HabitModel habitModel = getHabitOrThrow(habitId);
+        return habitCheckRepository.findAllByHabitAndDateBetween(habitModel, start, end);
     }
 
-    public HabitStatsResponse getStats(Long habitId, LocalDate start, LocalDate end) {
+    public HabitStatsResponseDto getStats(Long habitId, LocalDate start, LocalDate end) {
         if (end.isBefore(start)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "end date must be after start date");
         }
 
-        Habit habit = getHabitOrThrow(habitId);
+        HabitModel habitModel = getHabitOrThrow(habitId);
 
         // Récupérer tous les checks sur la période
-        List<HabitCheck> checks = habitCheckRepository.findAllByHabitAndDateBetween(habit, start, end);
+        List<HabitCheckModel> checks = habitCheckRepository.findAllByHabitAndDateBetween(habitModel, start, end);
 
-        HabitStatsResponse stats = new HabitStatsResponse(habitId, start, end);
+        HabitStatsResponseDto stats = new HabitStatsResponseDto(habitId, start, end);
 
         long totalDays = ChronoUnit.DAYS.between(start, end) + 1;
         stats.setTotalDays(totalDays);
 
         Set<LocalDate> checkedDates = checks.stream()
-                .map(HabitCheck::getDate)
+                .map(HabitCheckModel::getDate)
                 .collect(Collectors.toSet());
 
         long checkedDays = checkedDates.size();

@@ -2,7 +2,7 @@ package com.akirabane.backend.dto;
 
 import java.time.LocalDate;
 
-public class HabitStatsResponse {
+public class HabitStatsResponseDto {
 
     private Long habitId;
     private LocalDate startDate;
@@ -15,10 +15,10 @@ public class HabitStatsResponse {
     private int currentStreak;
     private int longestStreak;
 
-    public HabitStatsResponse() {
+    public HabitStatsResponseDto() {
     }
 
-    public HabitStatsResponse(Long habitId, LocalDate startDate, LocalDate endDate) {
+    public HabitStatsResponseDto(Long habitId, LocalDate startDate, LocalDate endDate) {
         this.habitId = habitId;
         this.startDate = startDate;
         this.endDate = endDate;

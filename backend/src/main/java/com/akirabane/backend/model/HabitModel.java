@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "habits")
-public class Habit {
+public class HabitModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class Habit {
 
     private boolean archived = false;
 
-    public Habit() {
+    public HabitModel() {
     }
 
-    public Habit(String name, String category, String frequencyType) {
+    public HabitModel(String name, String category, String frequencyType) {
         this.name = name;
         this.category = category;
         this.frequencyType = frequencyType;

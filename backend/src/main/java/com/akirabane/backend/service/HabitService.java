@@ -1,7 +1,7 @@
 package com.akirabane.backend.service;
 
-import com.akirabane.backend.dto.HabitRequest;
-import com.akirabane.backend.model.Habit;
+import com.akirabane.backend.dto.HabitRequestDto;
+import com.akirabane.backend.model.HabitModel;
 import com.akirabane.backend.repository.HabitRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,26 +18,26 @@ public class HabitService {
         this.habitRepository = habitRepository;
     }
 
-    public List<Habit> getAll() {
+    public List<HabitModel> getAll() {
         return habitRepository.findAll();
     }
 
-    public Habit getById(Long id) {
+    public HabitModel getById(Long id) {
         return habitRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "HabitModel not found"));
     }
 
-    public Habit create(HabitRequest request) {
-        Habit habit = new Habit();
-        habit.setName(request.getName());
-        habit.setCategory(request.getCategory());
-        habit.setFrequencyType(request.getFrequencyType());
-        habit.setArchived(false);
-        return habitRepository.save(habit);
+    public HabitModel create(HabitRequestDto request) {
+        HabitModel habitModel = new HabitModel();
+        habitModel.setName(request.getName());
+        habitModel.setCategory(request.getCategory());
+        habitModel.setFrequencyType(request.getFrequencyType());
+        habitModel.setArchived(false);
+        return habitRepository.save(habitModel);
     }
 
-    public Habit update(Long id, HabitRequest request) {
-        Habit existing = getById(id);
+    public HabitModel update(Long id, HabitRequestDto request) {
+        HabitModel existing = getById(id);
         existing.setName(request.getName());
         existing.setCategory(request.getCategory());
         existing.setFrequencyType(request.getFrequencyType());
@@ -47,7 +47,7 @@ public class HabitService {
 
     public void delete(Long id) {
         if (!habitRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "HabitModel not found");
         }
         habitRepository.deleteById(id);
     }

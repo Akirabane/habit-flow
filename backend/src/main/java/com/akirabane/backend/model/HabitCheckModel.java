@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "habit_checks",
         uniqueConstraints = @UniqueConstraint(columnNames = {"habit_id", "check_date"}))
-public class HabitCheck {
+public class HabitCheckModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +15,7 @@ public class HabitCheck {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "habit_id", nullable = false)
-    private Habit habit;
+    private HabitModel habit;
 
     @Column(name = "check_date", nullable = false)
     private LocalDate date;
@@ -23,10 +23,10 @@ public class HabitCheck {
     @Column(nullable = false)
     private boolean success = true;
 
-    public HabitCheck() {}
+    public HabitCheckModel() {}
 
-    public HabitCheck(Habit habit, LocalDate date) {
-        this.habit = habit;
+    public HabitCheckModel(HabitModel habitModel, LocalDate date) {
+        this.habit = habitModel;
         this.date = date;
         this.success = true;
     }
@@ -37,12 +37,12 @@ public class HabitCheck {
         return id;
     }
 
-    public Habit getHabit() {
+    public HabitModel getHabit() {
         return habit;
     }
 
-    public void setHabit(Habit habit) {
-        this.habit = habit;
+    public void setHabit(HabitModel habitModel) {
+        this.habit = habitModel;
     }
 
     public LocalDate getDate() {

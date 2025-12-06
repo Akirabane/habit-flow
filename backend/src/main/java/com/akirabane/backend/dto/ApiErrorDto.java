@@ -2,7 +2,7 @@ package com.akirabane.backend.dto;
 
 import java.time.LocalDateTime;
 
-public class ApiError {
+public class ApiErrorDto {
 
     private LocalDateTime timestamp;
     private int status;
@@ -10,10 +10,10 @@ public class ApiError {
     private String message;
     private String path;
 
-    public ApiError() {
+    public ApiErrorDto() {
     }
 
-    public ApiError(LocalDateTime timestamp, int status, String error, String message, String path) {
+    public ApiErrorDto(LocalDateTime timestamp, int status, String error, String message, String path) {
         this.timestamp = timestamp;
         this.status = status;
         this.error = error;

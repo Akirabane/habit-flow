@@ -3,9 +3,9 @@ package com.akirabane.backend.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class HabitRequest {
+public class HabitRequestDto {
 
-    @NotBlank(message = "Name can't be blank")
+    @NotBlank(message = "must not be blank")
     @Size(max = 100, message = "length must be <= 100")
     private String name;
 
@@ -18,7 +18,7 @@ public class HabitRequest {
 
     private boolean archived;
 
-    public HabitRequest() {
+    public HabitRequestDto() {
     }
 
     public String getName() {

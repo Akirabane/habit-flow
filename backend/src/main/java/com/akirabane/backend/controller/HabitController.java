@@ -1,7 +1,7 @@
 package com.akirabane.backend.controller;
 
-import com.akirabane.backend.dto.HabitRequest;
-import com.akirabane.backend.model.Habit;
+import com.akirabane.backend.dto.HabitRequestDto;
+import com.akirabane.backend.model.HabitModel;
 import com.akirabane.backend.service.HabitService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,25 +21,25 @@ public class HabitController {
 
     // GET /api/habits -> liste de toutes les habitudes
     @GetMapping
-    public List<Habit> getAllHabits() {
+    public List<HabitModel> getAllHabits() {
         return habitService.getAll();
     }
 
     // GET /api/habits/{id}
     @GetMapping("/{id}")
-    public Habit getHabitById(@PathVariable Long id) {
+    public HabitModel getHabitById(@PathVariable Long id) {
         return habitService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Habit createHabit(@Valid @RequestBody HabitRequest request) {
+    public HabitModel createHabit(@Valid @RequestBody HabitRequestDto request) {
         return habitService.create(request);
     }
 
     @PutMapping("/{id}")
-    public Habit updateHabit(@PathVariable Long id,
-                             @Valid @RequestBody HabitRequest request) {
+    public HabitModel updateHabit(@PathVariable Long id,
+                                  @Valid @RequestBody HabitRequestDto request) {
         return habitService.update(id, request);
     }
 

@@ -2,12 +2,12 @@ package com.akirabane.backend.dto;
 
 import java.time.LocalDate;
 
-public class HabitCheckRequest {
+public class HabitCheckRequestDto {
     private LocalDate date;
 
-    public HabitCheckRequest() {}
+    public HabitCheckRequestDto() {}
 
-    public HabitCheckRequest(LocalDate date) {
+    public HabitCheckRequestDto(LocalDate date) {
         this.date = date;
     }
 
