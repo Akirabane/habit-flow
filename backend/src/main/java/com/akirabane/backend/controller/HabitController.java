@@ -49,4 +49,18 @@ public class HabitController {
     public void deleteHabit(@PathVariable Long id) {
         habitService.delete(id);
     }
+
+    // POST /api/habits/user/1
+    @PostMapping("/user/{userId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public HabitModel createHabitForUser(@PathVariable Long userId,
+                                         @Valid @RequestBody HabitRequestDto requestDto) {
+        return habitService.createForUser(userId, requestDto);
+    }
+
+    // GET /api/habits/user/1
+    @GetMapping("/user/{userId}")
+    public List<HabitModel> getHabitsForUser(@PathVariable Long userId) {
+        return habitService.getAllForUser(userId);
+    }
 }

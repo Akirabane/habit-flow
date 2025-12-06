@@ -1,5 +1,6 @@
 package com.akirabane.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +18,7 @@ public class UserModel {
     private String email;
 
     // Le mot de passe sera hashé (BCrypt)
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
