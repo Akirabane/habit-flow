@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HabitRepository extends JpaRepository<Habit, Long> {
-
+    /**
+     * En attente
+     */
 }

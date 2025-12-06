@@ -10,18 +10,29 @@ public class Habit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
     private String category;
+
+    // daily / weekly / custom (on raffinera plus tard)
+    private String frequencyType;
+
     private boolean archived = false;
 
-    // getter & setters
+    public Habit() {
+    }
+
+    public Habit(String name, String category, String frequencyType) {
+        this.name = name;
+        this.category = category;
+        this.frequencyType = frequencyType;
+    }
+
+    // Getters & setters
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -38,6 +49,14 @@ public class Habit {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getFrequencyType() {
+        return frequencyType;
+    }
+
+    public void setFrequencyType(String frequencyType) {
+        this.frequencyType = frequencyType;
     }
 
     public boolean isArchived() {
