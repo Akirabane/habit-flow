@@ -1,5 +1,6 @@
 package com.akirabane.backend.service;
 
+import com.akirabane.backend.dto.HabitRequest;
 import com.akirabane.backend.model.Habit;
 import com.akirabane.backend.repository.HabitRepository;
 import org.springframework.http.HttpStatus;
@@ -26,17 +27,21 @@ public class HabitService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Habit not found"));
     }
 
-    public Habit create(Habit habit) {
+    public Habit create(HabitRequest request) {
+        Habit habit = new Habit();
+        habit.setName(request.getName());
+        habit.setCategory(request.getCategory());
+        habit.setFrequencyType(request.getFrequencyType());
         habit.setArchived(false);
         return habitRepository.save(habit);
     }
 
-    public Habit update(Long id, Habit updated) {
+    public Habit update(Long id, HabitRequest request) {
         Habit existing = getById(id);
-        existing.setName(updated.getName());
-        existing.setCategory(updated.getCategory());
-        existing.setFrequencyType(updated.getFrequencyType());
-        existing.setArchived(updated.isArchived());
+        existing.setName(request.getName());
+        existing.setCategory(request.getCategory());
+        existing.setFrequencyType(request.getFrequencyType());
+        existing.setArchived(request.isArchived());
         return habitRepository.save(existing);
     }
 

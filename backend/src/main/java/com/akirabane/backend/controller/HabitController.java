@@ -1,7 +1,9 @@
 package com.akirabane.backend.controller;
 
+import com.akirabane.backend.dto.HabitRequest;
 import com.akirabane.backend.model.Habit;
 import com.akirabane.backend.service.HabitService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,17 +31,16 @@ public class HabitController {
         return habitService.getById(id);
     }
 
-    // POST /api/habits
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Habit createHabit(@RequestBody Habit habit) {
-        return habitService.create(habit);
+    public Habit createHabit(@Valid @RequestBody HabitRequest request) {
+        return habitService.create(request);
     }
 
-    // PUT /api/habits/{id}
     @PutMapping("/{id}")
-    public Habit updateHabit(@PathVariable Long id, @RequestBody Habit habit) {
-        return habitService.update(id, habit);
+    public Habit updateHabit(@PathVariable Long id,
+                             @Valid @RequestBody HabitRequest request) {
+        return habitService.update(id, request);
     }
 
     // DELETE /api/habits/{id}
